@@ -1,3 +1,4 @@
 fitz
 frontend
 tools
+PyMuPDF
