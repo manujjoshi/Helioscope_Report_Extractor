@@ -12,7 +12,7 @@ uploaded_file = st.file_uploader("Upload your HelioScope summary report PDF", ty
 def extract_text(pdf_file):
     pdf_bytes = pdf_file.read()
     pdf_stream = io.BytesIO(pdf_bytes)
-    doc = fitz.open(stream=pdf_stream, filetype="pdf")
+    doc = fitz.Document(stream=pdf_stream, filetype="pdf")  # Updated line
     return "\n".join([page.get_text() for page in doc])
 
 def extract_data(text):
@@ -58,7 +58,7 @@ def extract_data(text):
         text, re.DOTALL
     )
 
-        # Enhanced Components Table Parsing: Inverters, Strings, Modules
+    # Enhanced Components Table Parsing: Inverters, Strings, Modules
     components = []
     component_block = re.findall(
         r"(Inverters|Strings[^\n]*?|Module)\s+([A-Za-z0-9\-/,().\s]+?)\s+(\d+)\s+\(([\d.,]+)\s*(kW|ft)\)",
@@ -77,7 +77,6 @@ def extract_data(text):
     inverters = [c for c in components if "inverter" in c["Component"].lower()]
     strings = [c for c in components if "string" in c["Component"].lower()]
     modules = [c for c in components if "module" in c["Component"].lower()]
-
 
     return data, inverters, strings, modules, losses, month_table, segment_pattern, components
 
